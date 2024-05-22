@@ -2,7 +2,7 @@
 // PURPOSE  :ISP
 // COURSE   :ICD2O
 // AUTHOR   :Nathan Andrew
-// DATE     :2024 05 08
+// DATE     :2024 05 22
 // MCU      :328P
 // STATUS   :Working
 // REFERENCE:
@@ -34,6 +34,7 @@ bool gameEnded = false;     // Track if the game is ended
 uint8_t scoreA = 0;         // Score for display A
 uint8_t scoreB = 0;         // Score for display B
 uint16_t reactionTime = 0;  // Store reaction time
+bool prevSwitchState = LOW; // Previous state of the start switch
 
 void setup() {
   pinMode(STARTSWITCH, INPUT);
@@ -74,9 +75,25 @@ void endGame() {
   digitalWrite(SIGNALED, LOW);  // Turn off the LED when button is pressed (LOW)
 }
 
+void resetGame() {
+  gameStarted = false;
+  gameEnded = false;
+  scoreA = 0;
+  scoreB = 0;
+  reactionTime = 0;
+}
+
 void loop() {
+  bool currentSwitchState = digitalRead(STARTSWITCH);
+
+  // Detect if the switch was turned off and then back on
+  if (prevSwitchState == HIGH && currentSwitchState == LOW) {
+    resetGame();
+  }
+  prevSwitchState = currentSwitchState;
+
   // Start the game if the start switch is HIGH and the game is not already started
-  if (digitalRead(STARTSWITCH) == HIGH && !gameStarted && !gameEnded) {
+  if (currentSwitchState == HIGH && !gameStarted && !gameEnded) {
     startGame();
   }
 
@@ -152,7 +169,6 @@ void loop() {
       }
     }
   }
-
 
   // Display Score A
   if (scoreA == 0) {
