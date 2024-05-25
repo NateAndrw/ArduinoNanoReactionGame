@@ -1,4 +1,4 @@
-// PROJECT  :Arduino Reaction Time Game
+// PROJECT  :Arduino Nano Reaction Game
 // PURPOSE  :ISP
 // COURSE   :ICD2O
 // AUTHOR   :Nathan Andrew
@@ -34,7 +34,7 @@ bool gameEnded = false;     // Track if the game is ended
 uint8_t scoreA = 0;         // Score for display A
 uint8_t scoreB = 0;         // Score for display B
 uint16_t reactionTime = 0;  // Store reaction time
-bool prevSwitchState = LOW; // Previous state of the start switch
+bool prevSwitchState = LOW;
 
 void setup() {
   pinMode(STARTSWITCH, INPUT);
@@ -64,7 +64,7 @@ void startGame() {
   gameStarted = true;  // Start Game
   gameEnded = false;   // Reset Game
 
-  uint32_t randomDelay = random(5000, 10000);  // Corrected range for random delay
+  uint32_t randomDelay = random(5000, 10000);  // Range for random delay
   delay(randomDelay);
   digitalWrite(SIGNALED, HIGH);
   reactionTime = millis();  // Starts the time when the LED goes HIGH
@@ -72,7 +72,7 @@ void startGame() {
 
 void endGame() {
   gameEnded = true;
-  digitalWrite(SIGNALED, LOW);  // Turn off the LED when button is pressed (LOW)
+  digitalWrite(SIGNALED, LOW);  // Turn off the LED when button is pressed LOW
 }
 
 void resetGame() {
@@ -97,7 +97,7 @@ void loop() {
     startGame();
   }
 
-  // If the stop button is pressed, calculate the reaction time
+  // If the stop button is pressed calculate the reaction time
   if (digitalRead(STOPBUTTON) == LOW && gameStarted && !gameEnded) {
     uint32_t stopTime = millis();
     reactionTime = stopTime - reactionTime;  // Calculate the reaction time
